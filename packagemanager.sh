@@ -18,11 +18,31 @@ else
     echo "✅ pre-commit is already installed."
 fi
 
-# Step 3: Install Python dependencies for Python-based pre-commit hooks
+# Step 3: Check if virtualenv is needed
+if ! command -v python3 -m venv &> /dev/null; then
+    echo "🔧 virtualenv is not installed. Installing python3-venv..."
+    sudo apt-get install -y python3-venv
+fi
+
+# Step 4: Create and activate virtual environment
+ENV_DIR="$HOME/.myenv"
+if [ ! -d "$ENV_DIR" ]; then
+    echo "🔧 Creating virtual environment in $ENV_DIR..."
+    python3 -m venv "$ENV_DIR"
+fi
+
+echo "🔧 Activating virtual environment..."
+source "$ENV_DIR/bin/activate"
+
+# Step 5: Upgrade pip in virtual environment
+echo "📦 Upgrading pip in the virtual environment..."
+pip install --upgrade pip
+
+# Step 6: Install Python dependencies for Python-based pre-commit hooks
 echo "📦 Installing Python linters..."
 pip install --upgrade pyupgrade autopep8 flake8 black cpplint yamllint
 
-# Step 4: Install Node.js tools (ESLint, Stylelint, HTMLHint)
+# Step 7: Install Node.js tools (ESLint, Stylelint, HTMLHint)
 if ! command -v node &> /dev/null || ! command -v npm &> /dev/null; then
     echo "🔧 Node.js or npm not found. Installing..."
     sudo apt update && sudo apt install -y nodejs npm
@@ -31,7 +51,7 @@ fi
 echo "📦 Installing Node linters globally..."
 npm install -g eslint stylelint htmlhint
 
-# Step 5: Install Checkstyle_jar (Java) if not already installed
+# Step 8: Install Checkstyle_jar (Java) if not already installed
 LATEST_VERSION=$(curl -s https://api.github.com/repos/checkstyle/checkstyle/releases/latest | grep -oP '"tag_name":\s*"checkstyle-\K[^"]+')
 CHECKSTYLE_VERSION="$LATEST_VERSION"
 CHECKSTYLE_JAR="checkstyle-${CHECKSTYLE_VERSION}-all.jar"
@@ -56,7 +76,7 @@ else
     echo "🔁 Alias for checkstyle already exists."
 fi
 
-# Step 6: Install Go if not already installed
+# Step 9: Install Go if not already installed
 if ! command -v go &> /dev/null; then
     echo "🔧 Go not found. Installing..."
     sudo apt install -y golang
@@ -64,7 +84,7 @@ else
     echo "✅ Go is already installed."
 fi
 
-# Step 7: Generate .pre-commit-config.yaml in project root
+# Step 10: Generate .pre-commit-config.yaml in project root
 echo "📝 Writing .pre-commit-config.yaml to project root..."
 cat <<'EOF' > "$PWD/.pre-commit-config.yaml"
 ---
@@ -250,12 +270,12 @@ repos:
         exclude: ''
 EOF
 
-# Step 8: Initialize pre-commit hooks
+# Step 11: Initialize pre-commit hooks
 echo "🔗 Installing pre-commit hooks from config..."
 pre-commit install
 pre-commit install --install-hooks  # Optional: Auto-install hooks for all environments
 
-# Step 9: Set up custom hooks
+# Step 12: Set up custom hooks
 echo "🔧 Setting up custom hooks..."
 mkdir -p custom_hooks
 
@@ -278,7 +298,7 @@ if __name__ == "__main__":
 EOF
 chmod +x custom_hooks/custom_linter.py
 
-# Step 10: Create the large file checker script
+# Step 13: Create the large file checker script
 cat <<'EOF' > custom_hooks/check_large_files.sh
 #!/bin/bash
 : "${MAX_SIZE:=20971520}" # 20MB in bytes
@@ -328,7 +348,7 @@ echo "✅ Custom hooks have been created."
 
 echo -e "\n🎉 Pre-commit setup complete and ready to use!"
 
-# Step 11: Validate pre-commit config
+# Step 14: Validate pre-commit config
 echo "🔍 Validating .pre-commit-config.yaml..."
 pre-commit validate-config
 
