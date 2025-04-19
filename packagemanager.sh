@@ -18,6 +18,10 @@ else
     echo "✅ pre-commit is already installed."
 fi
 
+# Set up global Git hooks path to the desired location
+echo "Setting up global Git hooks path..."
+git config --global core.hooksPath ~/.git-templates/hooks
+
 # Step 3: Check if virtualenv is needed
 if ! command -v python3 -m venv &> /dev/null; then
     echo "🔧 virtualenv is not installed. Installing python3-venv..."
