@@ -19,7 +19,7 @@ else
 fi
 
 # Step 3: Check if virtualenv is needed
-if ! command -v python3 -m venv &> /dev/null; then
+if ! python3 -m venv --help &> /dev/null; then
     echo "🔧 virtualenv is not installed. Installing python3-venv..."
     sudo apt-get install -y python3-venv
 fi
@@ -33,6 +33,7 @@ fi
 
 echo "🔧 Activating virtual environment..."
 source "$ENV_DIR/bin/activate"
+ echo "⚠️ Virtual environment is active. Run 'deactivate' to exit it later."
 
 # Step 5: Upgrade pip in virtual environment
 echo "📦 Upgrading pip in the virtual environment..."
