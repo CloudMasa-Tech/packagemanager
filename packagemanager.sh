@@ -18,15 +18,6 @@ else
     echo "✅ pre-commit is already installed."
 fi
 
-# Check and handle Git core.hooksPath
-echo "🔍 Checking Git hooks path configuration..."
-HOOKS_PATH=$(git config --get core.hooksPath)
-
-if [ -n "$HOOKS_PATH" ]; then
-  echo "⚠️  Detected custom core.hooksPath: $HOOKS_PATH"
-  echo "🔧 Unsetting core.hooksPath to allow pre-commit installation..."
-  git config --unset core.hooksPath
-fi
 # Step 3: Check if virtualenv is needed
 if ! command -v python3 -m venv &> /dev/null; then
     echo "🔧 virtualenv is not installed. Installing python3-venv..."
