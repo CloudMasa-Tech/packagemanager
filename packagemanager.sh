@@ -240,7 +240,7 @@ repos:
       # YAML Linting
       - id: yamllint
         name: YAML Linter (yamllint)
-        entry: yamllint
+        entry: yamllint -c .yamllint
         language: system
         files: \.ya?ml$
         stages: [commit]
@@ -353,3 +353,14 @@ echo "🔍 Validating .pre-commit-config.yaml..."
 pre-commit validate-config
 
 echo "✅ .pre-commit-config.yaml is valid."
+
+# Step 15: Add custom yamllint configuration
+echo "🧾 Adding custom .yamllint config..."
+cat <<'EOF' > .yamllint
+extends: default
+
+rules:
+  line-length:
+    max: 150
+    level: error
+EOF
