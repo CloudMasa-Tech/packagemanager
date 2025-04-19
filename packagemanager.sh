@@ -40,7 +40,7 @@ pip install --upgrade pip
 
 # Step 6: Install Python dependencies for Python-based pre-commit hooks
 echo "📦 Installing Python linters..."
-pip install --upgrade pyupgrade autopep8 flake8 black cpplint yamllint
+pip install --upgrade pyupgrade autopep8 flake8 cpplint yamllint
 
 # Step 7: Install Node.js tools (ESLint, Stylelint, HTMLHint)
 if ! command -v node &> /dev/null || ! command -v npm &> /dev/null; then
@@ -148,15 +148,6 @@ repos:
       - id: flake8
         stages: [commit]
         pass_filenames: false  # Only one pass_filenames line
-
-  - repo: https://github.com/psf/black
-    rev: 25.1.0
-    hooks:
-      - id: black
-        stages: [commit]
-        pass_filenames: true
-        # Add this line to prevent failure on file modifications
-        always_run: true
 
   - repo: https://github.com/golangci/golangci-lint
     rev: v2.1.2
