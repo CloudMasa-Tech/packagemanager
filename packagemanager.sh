@@ -21,6 +21,7 @@ fi
 # Step 3: Check if virtualenv is needed
 if ! python3 -m venv --help &> /dev/null; then
     echo "🔧 virtualenv is not installed. Installing python3-venv..."
+    sudo apt-get update
     sudo apt-get install -y python3-venv
 fi
 
