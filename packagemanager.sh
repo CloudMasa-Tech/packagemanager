@@ -36,11 +36,7 @@ pip install pre-commit
 echo "📦 Installing Python linters..."
 pip install --upgrade pyupgrade autopep8 flake8 cpplint yamllint
 
-# Step 6: Install Python dependencies for Python-based pre-commit hooks
-echo "📦 Installing Python linters..."
-pip install --upgrade pyupgrade autopep8 flake8 cpplint yamllint
-
-# Step 7: Install Node.js tools (ESLint, Stylelint, HTMLHint)
+# Step 6: Install Node.js tools (ESLint, Stylelint, HTMLHint)
 if ! command -v node &> /dev/null || ! command -v npm &> /dev/null; then
     echo "🔧 Node.js or npm not found. Installing..."
     sudo apt update && sudo apt install -y nodejs npm
@@ -69,7 +65,7 @@ fi
 # Install Node linters without sudo
 npm install -g eslint stylelint htmlhint
 
-# Step 8: Install Checkstyle_jar (Java) if not already installed
+# Step 7: Install Checkstyle_jar (Java) if not already installed
 LATEST_VERSION=$(curl -s https://api.github.com/repos/checkstyle/checkstyle/releases/latest | grep -oP '"tag_name":\s*"checkstyle-\K[^"]+')
 CHECKSTYLE_VERSION="$LATEST_VERSION"
 CHECKSTYLE_JAR="checkstyle-${CHECKSTYLE_VERSION}-all.jar"
@@ -94,7 +90,7 @@ else
     echo "🔁 Alias for checkstyle already exists."
 fi
 
-# Step 9: Install Go if not already installed
+# Step 8: Install Go if not already installed
 if ! command -v go &> /dev/null; then
     echo "🔧 Go not found. Installing..."
     sudo apt install -y golang
@@ -102,7 +98,7 @@ else
     echo "✅ Go is already installed."
 fi
 
-# Step 10: Generate .pre-commit-config.yaml in project root
+# Step 9: Generate .pre-commit-config.yaml in project root
 echo "📝 Writing .pre-commit-config.yaml to project root..."
 cat <<'EOF' > "$PWD/.pre-commit-config.yaml"
 ---
@@ -279,12 +275,12 @@ repos:
         exclude: ''
 EOF
 
-# Step 11: Initialize pre-commit hooks
+# Step 10: Initialize pre-commit hooks
 echo "🔗 Installing pre-commit hooks from config..."
 pre-commit install
 pre-commit install --install-hooks  # Optional: Auto-install hooks for all environments
 
-# Step 12: Set up custom hooks
+# Step 11: Set up custom hooks
 echo "🔧 Setting up custom hooks..."
 mkdir -p custom_hooks
 
@@ -307,7 +303,7 @@ if __name__ == "__main__":
 EOF
 chmod +x custom_hooks/custom_linter.py
 
-# Step 13: Create the large file checker script
+# Step 12: Create the large file checker script
 cat <<'EOF' > custom_hooks/check_large_files.sh
 #!/bin/bash
 : "${MAX_SIZE:=20971520}" # 20MB in bytes
@@ -357,13 +353,13 @@ echo "✅ Custom hooks have been created."
 
 echo -e "\n🎉 Pre-commit setup complete and ready to use!"
 
-# Step 14: Validate pre-commit config
+# Step 13: Validate pre-commit config
 echo "🔍 Validating .pre-commit-config.yaml..."
 pre-commit validate-config
 
 echo "✅ .pre-commit-config.yaml is valid."
 
-# Step 15: Add custom yamllint configuration
+# Step 14: Add custom yamllint configuration
 echo "🧾 Adding custom .yamllint config..."
 cat <<'EOF' > .yamllint
 extends: default
