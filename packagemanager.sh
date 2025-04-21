@@ -36,19 +36,38 @@ pip install pre-commit
 echo "📦 Installing Python linters..."
 pip install --upgrade pyupgrade autopep8 flake8 cpplint yamllint
 
-# Step 6: Install Node.js and npm if not already installed
+# Step 6: Install Python dependencies for Python-based pre-commit hooks
+echo "📦 Installing Python linters..."
+pip install --upgrade pyupgrade autopep8 flake8 cpplint yamllint
+
+# Step 7: Install Node.js tools (ESLint, Stylelint, HTMLHint)
 if ! command -v node &> /dev/null || ! command -v npm &> /dev/null; then
     echo "🔧 Node.js or npm not found. Installing..."
-    sudo apt-get update && sudo apt-get install -y nodejs npm
-else
-    echo "✅ Node.js and npm are installed."
+    sudo apt update && sudo apt install -y nodejs npm
 fi
 
-# Step 7: Install Node-based linters globally
 echo "📦 Installing Node linters globally..."
-npm install -g eslint stylelint htmlhint
 
-echo "✅ Setup complete. You can now configure your .pre-commit-config.yaml and run pre-commit hooks!"
+# Set up user-owned global npm directory to avoid EACCES errors
+if ! npm config get prefix | grep -q "$HOME/.npm-global"; then
+  echo "🔧 Setting up a user-level global npm directory to avoid permission issues..."
+  mkdir -p "$HOME/.npm-global"
+  npm config set prefix "$HOME/.npm-global"
+  
+  SHELL_CONFIG="$HOME/.bashrc"
+  if [ -n "$ZSH_VERSION" ]; then
+    SHELL_CONFIG="$HOME/.zshrc"
+  fi
+
+  if ! grep -q 'export PATH=$HOME/.npm-global/bin:$PATH' "$SHELL_CONFIG"; then
+    echo 'export PATH=$HOME/.npm-global/bin:$PATH' >> "$SHELL_CONFIG"
+    echo "✅ Added npm-global path to $SHELL_CONFIG"
+    export PATH="$HOME/.npm-global/bin:$PATH"
+  fi
+fi
+
+# Install Node linters without sudo
+npm install -g eslint stylelint htmlhint
 
 # Step 8: Install Checkstyle_jar (Java) if not already installed
 LATEST_VERSION=$(curl -s https://api.github.com/repos/checkstyle/checkstyle/releases/latest | grep -oP '"tag_name":\s*"checkstyle-\K[^"]+')
