@@ -107,45 +107,45 @@ repos:
       - id: check-json
       - id: detect-private-key
       - id: sort-simple-yaml
-        stages: [commit]
+        stages: [pre-commit]
 
   - repo: https://github.com/asottile/setup-cfg-fmt
     rev: v2.8.0
     hooks:
       - id: setup-cfg-fmt
-        stages: [commit]
+        stages: [pre-commit]
 
   - repo: https://github.com/asottile/reorder-python-imports
     rev: v3.14.0
     hooks:
       - id: reorder-python-imports
         args: [--py39-plus, --add-import, 'from __future__ import annotations']
-        stages: [commit]
+        stages: [pre-commit]
 
   - repo: https://github.com/asottile/add-trailing-comma
     rev: v3.1.0
     hooks:
       - id: add-trailing-comma
-        stages: [commit]
+        stages: [pre-commit]
 
   - repo: https://github.com/asottile/pyupgrade
     rev: v3.19.1
     hooks:
       - id: pyupgrade
         args: [--py39-plus]
-        stages: [commit]
+        stages: [pre-commit]
 
   - repo: https://github.com/hhatto/autopep8
     rev: v2.3.2
     hooks:
       - id: autopep8
-        stages: [commit]
+        stages: [pre-commit]
 
   - repo: https://github.com/PyCQA/flake8
     rev: 7.2.0
     hooks:
       - id: flake8
-        stages: [commit]
+        stages: [pre-commit]
         pass_filenames: false  # Only one pass_filenames line
 
   - repo: https://github.com/golangci/golangci-lint
@@ -155,7 +155,7 @@ repos:
         name: Go linter
         files: \.go$
         types: [file]
-        stages: [commit]
+        stages: [pre-commit]
 
   - repo: https://github.com/bridgecrewio/checkov
     rev: 3.2.406  # Use the latest version
@@ -165,7 +165,7 @@ repos:
         entry: checkov -d .
         language: python
         pass_filenames: false
-        stages: [commit]
+        stages: [pre-commit]
 
   - repo: https://github.com/eslint/eslint.git
     rev: v9.24.0  # instead of a v9 tag
@@ -173,7 +173,7 @@ repos:
       - id: eslint
         args: ['.']
         pass_filenames: true
-        stages: [commit]
+        stages: [pre-commit]
 
   - repo: local
     hooks:
@@ -183,7 +183,7 @@ repos:
         language: system
         types: [python]
         description: Runs a custom Python linter to enforce coding standards.
-        stages: [commit]
+        stages: [pre-commit]
 
 
       - id: check-large-files
@@ -192,14 +192,14 @@ repos:
         language: script
         types: [file]
         description: Prevents committing files larger than 1MB.
-        stages: [commit]
+        stages: [pre-commit]
 
       - id: golang-setup
         name: Go Environment Setup
         language: system
         entry: go version
         files: \.go$
-        stages: [commit]
+        stages: [pre-commit]
 
       # HTML Linting
       - id: htmlhint
@@ -208,7 +208,7 @@ repos:
         language: system
         types: [text]
         files: \.html$
-        stages: [commit]
+        stages: [pre-commit]
 
       - id: stylelint
         name: Stylelint for CSS
@@ -216,7 +216,7 @@ repos:
         language: node
         pass_filenames: false
         files: \.css$
-        stages: [commit]
+        stages: [pre-commit]
 
       # Java Linting using Checkstyle
       - id: checkstyle-java
@@ -225,7 +225,7 @@ repos:
         language: system
         types: [java]
         files: \.java$
-        stages: [commit]
+        stages: [pre-commit]
 
       # YAML Linting
       - id: yamllint
@@ -233,7 +233,7 @@ repos:
         entry: yamllint -c .yamllint
         language: system
         files: \.ya?ml$
-        stages: [commit]
+        stages: [pre-commit]
 
       # C Language Linting using cpplint
       - id: cpplint-c
@@ -242,7 +242,7 @@ repos:
         language: python
         types: [c]
         files: \.(c|h)$
-        stages: [commit]
+        stages: [pre-commit]
 
   - repo: local
     hooks:
@@ -255,7 +255,7 @@ repos:
         types: [file]
         verbose: true
         require_serial: true
-        stages: [commit]
+        stages: [pre-commit]
         args: []
         exclude: ''
 EOF
