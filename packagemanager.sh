@@ -369,16 +369,23 @@ rules:
     max: 150
     level: error
 EOF
-# Step 15: Symlink .pre-commit-config.yaml into all Git-enabled directories
-echo "🔗 Linking global .pre-commit-config.yaml to all Git-enabled subdirectories..."
-GLOBAL_CONFIG="$HOME/.pre-commit-config.yaml"
-cp "$PWD/.pre-commit-config.yaml" "$GLOBAL_CONFIG"
 
-for dir in */; do
-  if [ -d "$dir" ] && [ -d "$dir/.git" ]; then
-    ln -sf "$GLOBAL_CONFIG" "$dir/.pre-commit-config.yaml"
-    echo "✅ Linked config in $dir"
-  fi
+# Step 15: Link global .pre-commit-config.yaml to all Git-enabled subdirectories (if any)
+echo "🔗 Linking global .pre-commit-config.yaml to all Git-enabled subdirectories..."
+
+GLOBAL_CONFIG="$PWD/.pre-commit-config.yaml"
+
+# Find all Git-enabled subdirectories
+find . -type d -name ".git" | while read -r gitdir; do
+    dir=$(dirname "$gitdir")
+    TARGET_CONFIG="$dir/.pre-commit-config.yaml"
+    if [ "$GLOBAL_CONFIG" != "$TARGET_CONFIG" ]; then
+        echo "📁 Linking config to $dir"
+        ln -sf "$GLOBAL_CONFIG" "$TARGET_CONFIG"
+    fi
 done
 
-echo -e "\n🎉 All done! Pre-commit is fully installed, configured, and linked across your Git directories."
+echo "✅ Linking complete."
+
+# Final message
+echo -e "\n🎉 Pre-commit setup complete and ready to use in all Git-enabled directories!"
