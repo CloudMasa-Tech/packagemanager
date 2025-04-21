@@ -10,23 +10,14 @@ else
     echo "✅ pip is installed."
 fi
 
-# Step 2: Install pre-commit if not already installed
-if ! command -v pre-commit &> /dev/null; then
-    echo "🔧 pre-commit not found. Installing..."
-    pip install pre-commit
-else
-    echo "✅ pre-commit is already installed."
-fi
-
-# Step 3: Check if virtualenv is needed
+# Step 2: Check if python3-venv is installed
 if ! python3 -m venv --help &> /dev/null; then
-    echo "🔧 virtualenv is not installed. Installing python3-venv..."
-    sudo apt-get update
-    sudo apt-get install -y python3-venv
+    echo "🔧 python3-venv is not installed. Installing..."
+    sudo apt-get update && sudo apt-get install -y python3-venv
 fi
 
-# Step 4: Create and activate virtual environment
-ENV_DIR="$HOME/.myenv"
+# Step 3: Create and activate virtual environment
+ENV_DIR="$HOME/.venv"
 if [ ! -d "$ENV_DIR" ]; then
     echo "🔧 Creating virtual environment in $ENV_DIR..."
     python3 -m venv "$ENV_DIR"
@@ -34,24 +25,30 @@ fi
 
 echo "🔧 Activating virtual environment..."
 source "$ENV_DIR/bin/activate"
- echo "⚠️ Virtual environment is active. Run 'deactivate' to exit it later."
+echo "⚠️ Virtual environment is active. Run 'deactivate' to exit it later."
 
-# Step 5: Upgrade pip in virtual environment
-echo "📦 Upgrading pip in the virtual environment..."
+# Step 4: Upgrade pip and install pre-commit in the virtual environment
+echo "📦 Upgrading pip and installing pre-commit in the virtual environment..."
 pip install --upgrade pip
+pip install pre-commit
 
-# Step 6: Install Python dependencies for Python-based pre-commit hooks
+# Step 5: Install Python dependencies for Python-based pre-commit hooks
 echo "📦 Installing Python linters..."
 pip install --upgrade pyupgrade autopep8 flake8 cpplint yamllint
 
-# Step 7: Install Node.js tools (ESLint, Stylelint, HTMLHint)
+# Step 6: Install Node.js and npm if not already installed
 if ! command -v node &> /dev/null || ! command -v npm &> /dev/null; then
     echo "🔧 Node.js or npm not found. Installing..."
-    sudo apt update && sudo apt install -y nodejs npm
+    sudo apt-get update && sudo apt-get install -y nodejs npm
+else
+    echo "✅ Node.js and npm are installed."
 fi
 
+# Step 7: Install Node-based linters globally
 echo "📦 Installing Node linters globally..."
 npm install -g eslint stylelint htmlhint
+
+echo "✅ Setup complete. You can now configure your .pre-commit-config.yaml and run pre-commit hooks!"
 
 # Step 8: Install Checkstyle_jar (Java) if not already installed
 LATEST_VERSION=$(curl -s https://api.github.com/repos/checkstyle/checkstyle/releases/latest | grep -oP '"tag_name":\s*"checkstyle-\K[^"]+')
