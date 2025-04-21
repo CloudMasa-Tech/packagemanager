@@ -379,7 +379,7 @@ GLOBAL_CONFIG="$PWD/.pre-commit-config.yaml"
 find . -type d -name ".git" | while read -r gitdir; do
     dir=$(dirname "$gitdir")
     TARGET_CONFIG="$dir/.pre-commit-config.yaml"
-    if [ "$GLOBAL_CONFIG" != "$TARGET_CONFIG" ]; then
+    if [ "$GLOBAL_CONFIG" != "$TARGET_CONFIG" ] && [ "$dir" != "." ]; then
         echo "📁 Linking config to $dir"
         ln -sf "$GLOBAL_CONFIG" "$TARGET_CONFIG"
     fi
